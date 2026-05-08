@@ -1,0 +1,13 @@
+# Data files
+*.json
+*.pdf
+
+# Python caches
+__pycache__/
+*.pyc
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Output directories
+plots/

@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  cassandra:
+    image: cassandra:4.1
+    container_name: yelp-cassandra
+    ports:
+      - "9042:9042"
+    environment:
+      - CASSANDRA_CLUSTER_NAME=YelpCluster
+    # Use healthcheck to ensure Cassandra is ready
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "describe keyspaces"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+
+  spark:
+    build: 
+      context: ./spark-env
+    container_name: yelp-spark
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/app
+    depends_on:
+      cassandra:
+        condition: service_healthy
