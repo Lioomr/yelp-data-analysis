@@ -1,0 +1,8 @@
+(
+echo pyspark==3.3.2
+echo pandas
+echo matplotlib
+echo seaborn
+echo cassandra-driver
+echo findspark
+) > jupyter\requirements.txt
