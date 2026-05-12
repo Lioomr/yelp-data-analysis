@@ -1,4 +1,15 @@
-version: '3.8'
+# Yelp ML + Cassandra + PySpark dev container (project mounted at /app)
+#
+# Usage:
+#   docker compose up -d --build
+#   docker compose exec spark python /app/scripts/setup_cassandra.py
+#   docker compose exec spark python /app/prepare_data.py
+#   docker compose exec spark python /app/scripts/ingest_cassandra.py --truncate
+#   docker compose exec spark python /app/run_full_pipeline.py
+#   docker compose exec spark python /app/data_visualization.py
+#   docker compose exec spark streamlit run /app/dashboard_professional.py --server.address=0.0.0.0 --server.port=8501
+#
+# Or: scripts\docker_full.bat (Windows) / scripts/docker_full.sh (Git Bash)
 
 services:
   cassandra:
@@ -8,12 +19,12 @@ services:
       - "9042:9042"
     environment:
       - CASSANDRA_CLUSTER_NAME=YelpCluster
-    # Use healthcheck to ensure Cassandra is ready
     healthcheck:
       test: ["CMD", "cqlsh", "-e", "describe keyspaces"]
       interval: 15s
       timeout: 10s
-      retries: 10
+      retries: 12
+      start_period: 40s
 
   spark:
     build:
@@ -23,6 +34,11 @@ services:
     ports:
       - "8888:8888"
       - "8501:8501"
+    working_dir: /app
+    environment:
+      - CASSANDRA_HOSTS=cassandra
+      - CASSANDRA_PORT=9042
+      - CASSANDRA_KEYSPACE=yelp
     volumes:
       - .:/app
     depends_on:
