@@ -16,11 +16,13 @@ services:
       retries: 10
 
   spark:
-    build: 
-      context: ./spark-env
+    build:
+      context: .
+      dockerfile: spark-env/Dockerfile
     container_name: yelp-spark
     ports:
       - "8888:8888"
+      - "8501:8501"
     volumes:
       - .:/app
     depends_on:
