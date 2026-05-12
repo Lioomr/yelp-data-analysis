@@ -7,11 +7,10 @@ RUN apt-get update && \
     apt-get install -y default-jre-headless procps curl && \
     rm -rf /var/lib/apt/lists/*
 
-# Install PySpark, Jupyter, and required dependencies
-RUN pip install --no-cache-dir pyspark==3.5.1 cassandra-driver pandas matplotlib seaborn jupyter
-
-# Create work directory
 WORKDIR /app
+
+COPY requirements.txt /app/
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Expose Jupyter port
 EXPOSE 8888
